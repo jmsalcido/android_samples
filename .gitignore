@@ -1,3 +1,7 @@
+# CRAP
+.DS_Store
+Thumbs.db
+
 # built application files
 *.apk
 *.ap_
