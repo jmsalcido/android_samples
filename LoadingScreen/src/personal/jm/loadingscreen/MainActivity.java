@@ -5,6 +5,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 
+/**
+ * MainActivity.java
+ * Nothing else.
+ * @author jms
+ *
+ */
 public class MainActivity extends Activity {
 	
 	@Override
@@ -14,6 +20,7 @@ public class MainActivity extends Activity {
 	}
 	
 	public void loadActivity(View view) {
+		// Start a new activity
 		startActivity(new Intent(MainActivity.this, LoadedActivity.class));
 	}
 

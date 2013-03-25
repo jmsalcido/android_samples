@@ -17,26 +17,63 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 
+/**
+ * LoadedActivity.java
+ * Activity that will load content.
+ * @author jms
+ *
+ */
 public class LoadedActivity extends Activity {
 
+	/**
+	 * this view will handle the content
+	 */
 	private View mContentView;
+	
+	/**
+	 * this view will handle the loading spinner
+	 */
 	private View mLoadingView;
+	
+	/**
+	 * time for the animation
+	 */
 	private int mShortAnimationDuration;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_loaded);
+		
+		// save the content
 		mContentView = findViewById(R.id.content);
+		
+		// save the loading spinner
 		mLoadingView = findViewById(R.id.loading_spinner);
+		
+		// remove content
 		mContentView.setVisibility(View.GONE);
+		
+		// save the animation duration
+		// actually using longAnimTime not shortAnimTime :)
 		mShortAnimationDuration = getResources().getInteger(android.R.integer.config_longAnimTime);
+		
+		// save the imageView (at our content layout)
 		ImageView imgView = (ImageView) findViewById(R.id.imageview);
+		
+		// the tag will hold the url to our image
 		imgView.setTag("http://i.imgur.com/8or6G.jpg");
+		
+		// this is just a test.
 		imgView.setOnTouchListener(listenerMListener);
+		
+		// download our image with an asynctask look at the "post" event to see the loading process
 		new DownloadImageTask().execute(imgView);
 	}
 	
+	/**
+	 * TESTING TOUCH LISTENERS hue!
+	 */
 	private OnTouchListener listenerMListener = new OnTouchListener() {
 		
 		@Override
@@ -66,12 +103,21 @@ public class LoadedActivity extends Activity {
 		    }
 	};
 
+	/**
+	 * DownloadImageTask.class
+	 * Download images over the internutz (asynctask btw)
+	 * @author jms
+	 *
+	 */
 	private class DownloadImageTask extends AsyncTask<ImageView, Void, Bitmap> {
 		
+		// reference to our imageview
 		private ImageView image;
 		
-	    /** The system calls this to perform work in a worker thread and
-	      * delivers it the parameters given to AsyncTask.execute() */
+	    /** 
+	     * The system calls this to perform work in a worker thread and
+	     * delivers it the parameters given to AsyncTask.execute()
+	     */
 	    protected Bitmap doInBackground(ImageView... images) {
 	    	image = images[0];
 	    	String url = (String)image.getTag();
@@ -84,7 +130,7 @@ public class LoadedActivity extends Activity {
 	        final View showView = mContentView;
 	        final View hideView = mLoadingView;
 	        
-	        //image.setImageBitmap(result);
+	        // Set the imageview before the content is shown.
 	        image.setImageBitmap(result);
 
 	        // Set the "show" view to 0% opacity but visible, so that it is visible
@@ -93,17 +139,13 @@ public class LoadedActivity extends Activity {
 	        showView.setVisibility(View.VISIBLE);
 
 	        // Animate the "show" view to 100% opacity, and clear any animation listener set on
-	        // the view. Remember that listeners are not limited to the specific animation
-	        // describes in the chained method calls. Listeners are set on the
-	        // ViewPropertyAnimator object for the view, which persists across several
-	        // animations.
+	        // the view.
 	        showView.animate()
 	                .alpha(1f)
 	                .setDuration(mShortAnimationDuration)
 	                .setListener(null);
 
-	        // Animate the "hide" view to 0% opacity. After the animation ends, set its visibility
-	        // to GONE as an optimization step (it won't participate in layout passes, etc.)
+	        // Animate the "hide" view to 0% opacity.
 	        hideView.animate()
 	                .alpha(0f)
 	                .setDuration(mShortAnimationDuration)
@@ -115,13 +157,18 @@ public class LoadedActivity extends Activity {
 	                });
 	    }
 	    
+	    /**
+	     * download an image from the internet!
+	     * @param url
+	     * @return
+	     */
 	    private Bitmap loadImageFromNetwork(String url) {
 	    	Bitmap bm = null;
 	        try {
 	        	URL urln = new URL(url);
 	            bm = BitmapFactory.decodeStream(urln.openConnection().getInputStream());
 	        } catch (IOException e) {
-	            Log.e("Hub","Error getting the image from server : " + e.getMessage().toString());
+	            Log.e("HUE","Error downloading the image from server : " + e.getMessage().toString());
 	        } 
 	        return bm;
 	    }
