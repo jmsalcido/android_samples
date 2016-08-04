@@ -6,8 +6,8 @@ import org.otfusion.stupidrx.view.MainMvpView;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import rx.Observable;
-import rx.Subscriber;
+import rx.Single;
+import rx.SingleSubscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -31,7 +31,7 @@ public class MainPresenter implements Presenter<MainMvpView> {
     @Override
     public void dettach() {
         view = null;
-        if(holidaySubscription != null && !holidaySubscription.isUnsubscribed()) {
+        if (holidaySubscription != null && !holidaySubscription.isUnsubscribed()) {
             holidaySubscription.unsubscribe();
             holidaySubscription = null;
         }
@@ -39,32 +39,28 @@ public class MainPresenter implements Presenter<MainMvpView> {
 
     public void loadHolidays() {
         view.showWaiting();
-        Observable<List<String>> observable = Observable.fromCallable(new Callable<List<String>>() {
+        Single<List<String>> clientCall = Single.fromCallable(new Callable<List<String>>() {
             @Override
             public List<String> call() throws Exception {
                 return pseudoClient.getListOfHolidays();
             }
         });
 
-        holidaySubscription = observable.subscribeOn(Schedulers.newThread())
+        holidaySubscription = clientCall.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<String>>() {
-                    @Override
-                    public void onCompleted() {
+                .subscribe(new SingleSubscriber<List<String>>() {
+                               @Override
+                               public void onSuccess(List<String> value) {
+                                   showLoadedHolidays(value);
+                               }
 
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        view.hideWaiting();
-                        view.showError(e.getMessage());
-                    }
-
-                    @Override
-                    public void onNext(List<String> holidays) {
-                        showLoadedHolidays(holidays);
-                    }
-                });
+                               @Override
+                               public void onError(Throwable error) {
+                                   view.hideWaiting();
+                                   view.showError(error.getMessage());
+                               }
+                           }
+                );
     }
 
     private void showLoadedHolidays(List<String> holidays) {

@@ -21,7 +21,9 @@ public class PseudoClient {
     }
 
     private List<String> buildListOfHolidays() {
-        return Arrays.asList("Work Day", "Independence Day", "St. Patric's Day", "Christmas", "Hanuka", "Kwanzaa", "Your Mom's Birthday");
+        return Arrays.asList("Work Day", "Independence Day", "Some other", "Another one",
+                "Lets try with this one", "okay", "next", "St. Patric's Day", "Christmas",
+                "Hanuka", "Kwanzaa", "Your Mom's Birthday");
     }
 
     public List<String> getListOfHolidaysWithError() {

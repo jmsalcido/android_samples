@@ -1,14 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="44dp"
+    android:layout_height="wrap_content"
+    android:gravity="center"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/holiday_name"
-        tools:text="Holiday Name goes here."
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        app:cardUseCompatPadding="true"
+        card_view:cardPreventCornerOverlap="true"
+        card_view:cardCornerRadius="2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/holiday_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal"
+                tools:text="Holiday Name goes here." />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
 
 </LinearLayout>
