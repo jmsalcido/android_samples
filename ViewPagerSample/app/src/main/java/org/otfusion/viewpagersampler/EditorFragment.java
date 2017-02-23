@@ -13,7 +13,7 @@ public class EditorFragment extends Fragment {
 
     private EditText mEditText;
 
-    public static Fragment newInstance(int position) {
+    public static EditorFragment newInstance(int position) {
         EditorFragment editorFragment = new EditorFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(KEY, position);
@@ -29,7 +29,15 @@ public class EditorFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.editor_fragment, container, false);
         mEditText = (EditText) view.findViewById(R.id.editor);
-        mEditText.setHint("Pager: #" + (getArguments().getInt(KEY) + 1));
+        mEditText.setHint(getTitle());
         return view;
+    }
+
+    private int getPosition() {
+        return getArguments().getInt(KEY) + 1;
+    }
+
+    public CharSequence getTitle() {
+        return "Pager: #" + getPosition();
     }
 }
